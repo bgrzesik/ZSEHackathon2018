@@ -35,7 +35,7 @@ class WAVHelper
 {
   public:
     WAVHelper();
-    WAVFile Load(std::string file);
+    void Load(WAVFile &file, std::string filename);
     void Append(WAVFile &wav);
     void Append(WAVFile &wav, float length);
     void AddAt(WAVFile &wav, float offset);
