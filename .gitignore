@@ -1,0 +1,5 @@
+cef/**/*
+macos/Frameworks/**
+cmake-build-debug/**
+.idea/**
+**/.DS_Store
