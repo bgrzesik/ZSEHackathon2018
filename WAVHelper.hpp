@@ -25,7 +25,7 @@ class WAVFile
   public:
     WAVFile();
     void SetTone(int diff);
-    void SetSpeed(int acc);
+    void SetSpeed(int multiplier);
     WAVHeader header;
     int32_t size;
     char* data;
@@ -35,10 +35,12 @@ class WAVHelper
 {
   public:
     WAVHelper();
-    WAVFile load(std::string file);
-    void append(WAVFile wav);
-    void append(WAVFile wav, float length);
-    void render(std::string output);
+    WAVFile Load(std::string file);
+    void Append(WAVFile wav);
+    void Append(WAVFile wav, float length);
+    void AddAt(WAVFile wav, float offset);
+    void AddAt(WAVFile wav, float offset, float length);
+    void Render(std::string output);
   private:
     WAVFile file_;
 };
