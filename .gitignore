@@ -1,3 +1,5 @@
+*.o
+exec
 cef/**/*
 macos/Frameworks/**
 cmake-build-debug/**
