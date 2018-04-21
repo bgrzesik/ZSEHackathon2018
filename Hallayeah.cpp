@@ -12,6 +12,7 @@ Hallayeah::Hallayeah() {
 bool Hallayeah::Execute(const CefString &name, CefRefPtr<CefV8Value> object, const CefV8ValueList &arguments,
                         CefRefPtr<CefV8Value> &retval, CefString &exception) {
 
+    std::cout << name.ToString() << std::endl;
     std::cout << "WEwef" << std::endl;
     return false;
 }

@@ -6,6 +6,7 @@
 #include "Handler.hpp"
 #include "OSXHelper.h"
 #include "Hallayeah.hpp"
+#include "JSAudioNoob.hpp"
 
 #include <iostream>
 #include <include/wrapper/cef_helpers.h>
@@ -37,7 +38,6 @@ void App::OnContextInitialized() {
 }
 
 void App::OnRegisterCustomSchemes(CefRawPtr<CefSchemeRegistrar> registrar) {
-    registrar->AddCustomScheme("res", true, true, false, true, false, false);
 }
 
 App::App(CefMainArgs &args): args_(args) {
@@ -50,8 +50,15 @@ CefRefPtr<CefRenderProcessHandler> App::GetRenderProcessHandler() {
 
 void App::OnContextCreated(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefV8Context> context) {
     const CefRefPtr<CefV8Value> &global = context->GetGlobal();
+
     const CefRefPtr<CefV8Value> &hallayeah = global->CreateFunction("hallayeah", new Hallayeah());
     global->SetValue("hallayeah", hallayeah, V8_PROPERTY_ATTRIBUTE_NONE);
+
+    const CefRefPtr<CefV8Value> &audio_noob = CefV8Value::CreateObject(NULL, NULL);
+    JSAudioNoob *js_audio_noob = new JSAudioNoob();
+    audio_noob->SetValue("new", CefV8Value::CreateFunction("new", js_audio_noob), V8_PROPERTY_ATTRIBUTE_NONE);
+    global->SetValue("AudioNoob", audio_noob, V8_PROPERTY_ATTRIBUTE_NONE);
+
 }
 
 

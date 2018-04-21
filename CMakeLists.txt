@@ -10,7 +10,7 @@ add_executable(AudioNoob MACOSX_BUNDLE
                App.cpp App.hpp
                Handler.cpp Handler.hpp
                macos/Resources/index.html
-               Hallayeah.cpp Hallayeah.hpp)
+               Hallayeah.cpp Hallayeah.hpp JSAudioNoob.cpp JSAudioNoob.hpp)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/cef)
 message(CEF_TARGET ${CEF_TARGET})
