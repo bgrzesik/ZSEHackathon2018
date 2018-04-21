@@ -67,6 +67,7 @@
                     <div class="sec">1</div>
                   </div>
                   <div class="grid">
+                    <div class="line"></div>
                     <div class="item" data-item="sample1">
                       <div class="leftinfo">SAMPLE 1</div>
                       <div class="rightboxes">
@@ -130,7 +131,7 @@
 
       $('.grid:before').animate({
           left: "1200px",
-      }, 60000, function() {
+      }, 6000, function() {
           // Animation complete.
       });
 
@@ -186,12 +187,11 @@
       var wh = WAVHelper.new();
 
       function letsPlay() {
-          myExport();
-          var allItems = ds.getSelection();
+          var allItems = myExport();
           console.log('gramy');
 
           for(var i = 0; i<allItems.length; i++) {
-              var actSample = ab.Load('samples/'+allItems[i].itemType+'.wav');
+              var actSample = wh.Load('samples/'+allItems[i].itemType+'.wav');
               wh.AddAt(actSample, allItems[i].itemSecIndex, 0.1);
           }
 
