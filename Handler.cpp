@@ -3,7 +3,6 @@
 //
 
 #include "Handler.hpp"
-#include "Hallayeah.hpp"
 
 #include <include/views/cef_browser_view.h>
 #include <include/views/cef_window.h>
@@ -46,7 +45,7 @@ CefRefPtr<Handler> Handler::GetHandler() {
 
 void Handler::OnAfterCreated(CefRefPtr<CefBrowser> browser) {
     this->browsers_.push_back(browser);
-    browser->GetMainFrame()->ExecuteJavaScript("console.log('fwewfwef');", "", 0);
+
 }
 
 bool Handler::DoClose(CefRefPtr<CefBrowser> browser) {

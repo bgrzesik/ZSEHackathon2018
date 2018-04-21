@@ -87,7 +87,7 @@ extern "C" NSWindow* CreateView() {
 
     [app activateIgnoringOtherApps: YES];
 
-    auto rect = NSRect {100, 100, 800, 800};
+    auto rect = NSRect {100, 100, 1280, 800};
     NSWindow *window = [[NSWindow alloc] initWithContentRect:rect
                                                    styleMask:NSWindowStyleMaskClosable | NSWindowStyleMaskResizable | NSWindowStyleMaskTitled
                                                      backing:NSBackingStoreBuffered

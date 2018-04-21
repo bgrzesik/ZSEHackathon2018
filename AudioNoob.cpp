@@ -4,9 +4,6 @@
 AudioNoob::AudioNoob()
 {
 }
-AudioNoob::~AudioNoob()
-{
-}
 
 void AudioNoob::Play(std::string file)
 {

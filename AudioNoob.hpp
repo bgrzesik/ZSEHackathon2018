@@ -8,9 +8,11 @@
 #else
   #include <OpenAL/al.h>
   #include <OpenAL/alc.h>
+  #include <al/alut.h>
 #endif
 
 #include <string>
+#include <include/cef_base.h>
 
 class Audio
 {
@@ -20,7 +22,6 @@ class AudioNoob
 {
   public:
     AudioNoob();
-		~AudioNoob();
     void Play(std::string file);
 
   private:
