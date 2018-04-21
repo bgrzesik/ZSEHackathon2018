@@ -84,7 +84,6 @@
         el.data('item',samplesArr[i]).find('.leftinfo').text(samplesArr[i]);
         $(el).appendTo('.timeline .grid');
         console.log(el);
-
       }
 
 
@@ -142,11 +141,16 @@
           var allItems = myExport();
           console.log('gramy');
 
-          for(var i = 0; i<allItems.length; i++) {
-              console.log(allItems[i].itemType);
-              console.log(allItems[i].itemSecIndex);
-              var actSample = wh.Load('samples/'+allItems[i].itemType+'.wav');
-              wh.AddAt(actSample, allItems[i].itemSecIndex, 0.1);
+          var sum = 1;
+          for(var i = 1; i<allItems.length; i++) {
+              if(allItems[i-1].itemType == allItems[i].itemType) {
+                  sum++;
+                  continue;
+              } else {
+                  var actSample = wh.Load('samples/'+allItems[i].itemType);
+                  wh.AddAt(actSample, allItems[i].itemSecIndex, 0.1*sum);
+                  sum=1;
+              }
           }
 
           wh.Render('koncowy.wav');
