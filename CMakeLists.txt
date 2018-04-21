@@ -9,8 +9,8 @@ add_executable(AudioNoob MACOSX_BUNDLE
                main.cpp
                App.cpp App.hpp
                Handler.cpp Handler.hpp
-               index.html
-               )
+               macos/Resources/index.html
+               Hallayeah.cpp Hallayeah.hpp)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/cef)
 message(CEF_TARGET ${CEF_TARGET})
@@ -49,7 +49,7 @@ FIX_MACOSX_MAIN_FRAMEWORK_RPATH(AudioNoob)
 
 add_custom_command(
         TARGET AudioNoob
-        PRE_BUILD
+        POST_BUILD
 
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${PROJECT_SOURCE_DIR}/macos"

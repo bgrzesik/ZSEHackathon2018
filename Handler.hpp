@@ -11,15 +11,18 @@
 class Handler : public CefClient,
                 public CefDisplayHandler,
                 public CefLifeSpanHandler,
-                public CefLoadHandler {
+                public CefRequestHandler {
     IMPLEMENT_REFCOUNTING(Handler);
 
 public:
     static CefRefPtr<Handler> GetHandler();
-
+    CefRefPtr<CefRequestHandler> GetRequestHandler() override;
     CefRefPtr<CefDisplayHandler> GetDisplayHandler() override;
     CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() override;
-    CefRefPtr<CefLoadHandler> GetLoadHandler() override;
+
+
+    bool OnConsoleMessage(CefRefPtr<CefBrowser> browser, cef_log_severity_t level, const CefString &message,
+                          const CefString &source, int line) override;
 
     void OnTitleChange(CefRefPtr<CefBrowser> browser, const CefString &title) override;
 
@@ -29,8 +32,10 @@ public:
 
     void OnBeforeClose(CefRefPtr<CefBrowser> browser) override;
 
-    void OnLoadError(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, ErrorCode errorCode,
-                     const CefString &errorText, const CefString &failedUrl) override;
+    void CloseAll();
+private:
+    Handler();
+    std::vector<CefRefPtr<CefBrowser>> browsers_;
 };
 
 

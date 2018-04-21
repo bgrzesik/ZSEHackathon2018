@@ -5,6 +5,7 @@
 #include "App.hpp"
 #include "Handler.hpp"
 #include "OSXHelper.h"
+#include "Hallayeah.hpp"
 
 #include <iostream>
 #include <include/wrapper/cef_helpers.h>
@@ -13,44 +14,6 @@
 #include <include/views/cef_window.h>
 
 
-class WindowDelegate : public CefWindowDelegate {
-    IMPLEMENT_REFCOUNTING(WindowDelegate);
-    DISALLOW_COPY_AND_ASSIGN(WindowDelegate);
-public:
-    explicit WindowDelegate(CefRefPtr<CefBrowserView> browser_view): browser_view_(browser_view) {
-    }
-
-    void OnWindowCreated(CefRefPtr<CefWindow> window) override {
-        window->AddChildView(this->browser_view_);
-        window->Show();
-        window->RequestFocus();
-    }
-
-    bool IsFrameless(CefRefPtr<CefWindow> window) override {
-        return true;
-    }
-
-    void OnWindowDestroyed(CefRefPtr<CefWindow> window) override {
-        browser_view_ = nullptr;
-        CefShutdown();
-    }
-
-    bool CanClose(CefRefPtr<CefWindow> window) override {
-        CefRefPtr<CefBrowser> browser = browser_view_->GetBrowser();
-        if (browser) {
-            browser->GetHost()->TryCloseBrowser();
-        }
-        return true;
-    }
-
-private:
-    CefRefPtr<CefBrowserView> browser_view_;
-};
-
-
-App::App() {
-}
-
 CefRefPtr<CefBrowserProcessHandler> App::GetBrowserProcessHandler() {
     return this;
 }
@@ -58,13 +21,37 @@ CefRefPtr<CefBrowserProcessHandler> App::GetBrowserProcessHandler() {
 void App::OnContextInitialized() {
     CEF_REQUIRE_UI_THREAD();
 
-    NSWindow *window = CreateView();
 
+    NSWindow *window = CreateView();
     CefBrowserSettings settings;
     CefWindowInfo window_info;
+    window_info.x = 100;
+    window_info.y = 100;
+    window_info.width = 800;
+    window_info.height = 800;
     window_info.SetAsChild(GetContentView(window), 0, 0, 800, 800);
 
-    CefBrowserHost::CreateBrowser(window_info, Handler::GetHandler(), "http://motherfuckingwebsite.com/", settings, nullptr);
+    std::string file = "file://" + std::string(args_.argv[0]) + "/../../Resources/index.html";
+    std::cout << file << std::endl << std::flush;
+    CefBrowserHost::CreateBrowser(window_info, Handler::GetHandler(), file, settings, nullptr);
+}
+
+void App::OnRegisterCustomSchemes(CefRawPtr<CefSchemeRegistrar> registrar) {
+    registrar->AddCustomScheme("res", true, true, false, true, false, false);
+}
+
+App::App(CefMainArgs &args): args_(args) {
+
+}
+
+CefRefPtr<CefRenderProcessHandler> App::GetRenderProcessHandler() {
+    return this;
+}
+
+void App::OnContextCreated(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefV8Context> context) {
+    const CefRefPtr<CefV8Value> &global = context->GetGlobal();
+    const CefRefPtr<CefV8Value> &hallayeah = global->CreateFunction("hallayeah", new Hallayeah());
+    global->SetValue("hallayeah", hallayeah, V8_PROPERTY_ATTRIBUTE_NONE);
 }
 
 
