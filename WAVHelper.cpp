@@ -26,7 +26,7 @@ WAVHelper::WAVHelper() {
   file_ = WAVFile();
 }
 
-WAVFile WAVHelper::load(std::string file)
+WAVFile WAVHelper::Load(std::string file)
 {
   WAVFile wav;
   FILE* f = fopen(file.c_str(), "r");
@@ -38,7 +38,7 @@ WAVFile WAVHelper::load(std::string file)
   return wav;
 }
 
-void WAVHelper::append(WAVFile wav) 
+void WAVHelper::Append(WAVFile wav) 
 {
   file_.data = (char*) realloc(file_.data, file_.size + wav.size);
   memcpy(file_.data + file_.size, wav.data, wav.size);
@@ -47,7 +47,7 @@ void WAVHelper::append(WAVFile wav)
   file_.header.Subchunk2Size += wav.size;
 }
 
-void WAVHelper::append(WAVFile wav, float length)
+void WAVHelper::Append(WAVFile wav, float length)
 {
   int num_bytes = length * wav.header.ByteRate;
   file_.data = (char*) realloc(file_.data, file_.size + num_bytes);
@@ -57,9 +57,39 @@ void WAVHelper::append(WAVFile wav, float length)
   file_.header.Subchunk2Size += num_bytes;
 }
 
-void WAVHelper::render(std::string output)
+void WAVHelper::AddAt(WAVFile wav, float offset)
+{
+  if(wav.size > file_.size) {
+    file_.data = (char*) realloc(file_.data, wav.size);
+    file_.header.ChunkSize = wav.header.ChunkSize;
+    file_.header.Subchunk2Size = wav.header.Subchunk2Size;
+    file_.size = wav.size;
+  }
+  int offset_bytes = offset * wav.header.ByteRate;
+  for(int i = 0; i < wav.size; i++) {
+    file_.data[i+offset_bytes] += wav.data[i];
+  } 
+}
+
+void WAVHelper::AddAt(WAVFile wav, float offset, float length)
+{
+  int length_bytes = length * wav.header.ByteRate;
+  if(length_bytes > file_.size) {
+    file_.data = (char*) realloc(file_.data, length_bytes);
+    file_.header.ChunkSize = 36 + length_bytes;
+    file_.header.Subchunk2Size = length_bytes;
+    file_.size = length_bytes;
+  }
+  int offset_bytes = offset * wav.header.ByteRate;
+  for(int i = 0; i < length_bytes; i++) {
+    file_.data[i+offset_bytes] += wav.data[i];
+  } 
+}
+
+void WAVHelper::Render(std::string output)
 {
   FILE* f = fopen(output.c_str(), "w");
   fwrite(&file_.header, sizeof(WAVHeader), 1, f);
   fwrite(file_.data, file_.size, 1, f);
+  fclose(f);
 }
