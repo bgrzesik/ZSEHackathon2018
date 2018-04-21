@@ -193,7 +193,7 @@ body::-webkit-scrollbar-thumb {
   right: 20px;
 }
 
-.play,.add {
+.play,.add,.stop {
   font-size: 30px;
   float: right;
   color: #474747;
@@ -209,4 +209,9 @@ body::-webkit-scrollbar-thumb {
 }
 .add {
   margin-right: 15px;
+}
+.stop {
+  position: fixed;
+  top: 120px;
+  right: 200px;
 }
