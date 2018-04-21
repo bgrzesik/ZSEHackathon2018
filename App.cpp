@@ -5,8 +5,8 @@
 #include "App.hpp"
 #include "Handler.hpp"
 #include "OSXHelper.h"
-#include "Hallayeah.hpp"
 #include "JSAudioNoob.hpp"
+#include "JSWAVHelper.hpp"
 
 #include <iostream>
 #include <include/wrapper/cef_helpers.h>
@@ -28,9 +28,9 @@ void App::OnContextInitialized() {
     CefWindowInfo window_info;
     window_info.x = 100;
     window_info.y = 100;
-    window_info.width = 800;
+    window_info.width = 1280;
     window_info.height = 800;
-    window_info.SetAsChild(GetContentView(window), 0, 0, 800, 800);
+    window_info.SetAsChild(GetContentView(window), 0, 0, 1280, 800);
 
     std::string file = "file://" + std::string(args_.argv[0]) + "/../../Resources/index.html";
     std::cout << file << std::endl << std::flush;
@@ -51,13 +51,15 @@ CefRefPtr<CefRenderProcessHandler> App::GetRenderProcessHandler() {
 void App::OnContextCreated(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefV8Context> context) {
     const CefRefPtr<CefV8Value> &global = context->GetGlobal();
 
-    const CefRefPtr<CefV8Value> &hallayeah = global->CreateFunction("hallayeah", new Hallayeah());
-    global->SetValue("hallayeah", hallayeah, V8_PROPERTY_ATTRIBUTE_NONE);
-
     const CefRefPtr<CefV8Value> &audio_noob = CefV8Value::CreateObject(NULL, NULL);
     JSAudioNoob *js_audio_noob = new JSAudioNoob();
     audio_noob->SetValue("new", CefV8Value::CreateFunction("new", js_audio_noob), V8_PROPERTY_ATTRIBUTE_NONE);
     global->SetValue("AudioNoob", audio_noob, V8_PROPERTY_ATTRIBUTE_NONE);
+
+    const CefRefPtr<CefV8Value> &wav_helper = CefV8Value::CreateObject(NULL, NULL);
+    JSWAVHelper *js_wav_helper = new JSWAVHelper();
+    wav_helper->SetValue("new", CefV8Value::CreateFunction("new", js_wav_helper), V8_PROPERTY_ATTRIBUTE_NONE);
+    global->SetValue("WAVHelper", wav_helper, V8_PROPERTY_ATTRIBUTE_NONE);
 
 }
 

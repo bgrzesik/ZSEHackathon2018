@@ -9,8 +9,9 @@ add_executable(AudioNoob MACOSX_BUNDLE
                main.cpp
                App.cpp App.hpp
                Handler.cpp Handler.hpp
-               macos/Resources/index.html
-               Hallayeah.cpp Hallayeah.hpp JSAudioNoob.cpp JSAudioNoob.hpp)
+               JSAudioNoob.cpp JSAudioNoob.hpp
+               AudioNoob.cpp AudioNoob.hpp
+               WAVHelper.cpp WAVHelper.hpp JSWAVHelper.cpp JSWAVHelper.hpp RefWAVFile.cpp RefWAVFile.hpp JSWAVFile.cpp JSWAVFile.hpp)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/cef)
 message(CEF_TARGET ${CEF_TARGET})
@@ -28,6 +29,8 @@ target_link_libraries(AudioNoob "-framework Foundation")
 target_link_libraries(AudioNoob "-framework IOKit")
 target_link_libraries(AudioNoob "-framework Security")
 target_link_libraries(AudioNoob "-framework SystemConfiguration")
+target_link_libraries(AudioNoob alut)
+target_link_libraries(AudioNoob "-framework OpenAL")
 target_link_libraries(AudioNoob "-F ${PROJECT_SOURCE_DIR}/cef/Debug -framework 'Chromium Embedded Framework'")
 
 set_target_properties(AudioNoob PROPERTIES INSTALL_RPATH "${PROJECT_SOURCE_DIR}/cef/Debug")

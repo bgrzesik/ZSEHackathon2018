@@ -14,7 +14,6 @@ int main(int argc, char *argv[]) {
     CefRefPtr<App> app(new App(main_args));
 
     Platform platform;
-
     InitPlatform(&platform);
 
     CefSettings settings;

@@ -4,15 +4,36 @@
 
 #include <iostream>
 #include "JSAudioNoob.hpp"
+#include "AudioNoob.hpp"
+
+
+class RefAudioNoob : public CefBaseRefCounted {
+IMPLEMENT_REFCOUNTING(RefAudioNoob);
+public:
+    AudioNoob inner_;
+};
 
 bool JSAudioNoob::Execute(const CefString &name, CefRefPtr<CefV8Value> object, const CefV8ValueList &arguments,
-                          CefRefPtr<CefV8Value> &retval, CefString &exception) {
+                          CefRefPtr<CefV8Value> &retval, CefString &exception)
+{
     if (name == "new") {
-        retval = CefV8Value::CreateObject(nullptr, nullptr);
-        retval->SetValue("append", CefV8Value::CreateFunction("append", this), V8_PROPERTY_ATTRIBUTE_NONE);
-        retval->SetValue("addTo", CefV8Value::CreateFunction("addTo", this), V8_PROPERTY_ATTRIBUTE_NONE);
-        retval->SetValue("render", CefV8Value::CreateFunction("render", this), V8_PROPERTY_ATTRIBUTE_NONE);
+        const CefRefPtr<CefV8Value> &ret = object->CreateObject(NULL, NULL);
+        ret->SetUserData(new RefAudioNoob);
+        ret->SetValue("play", CefV8Value::CreateFunction("play", new JSAudioNoob), V8_PROPERTY_ATTRIBUTE_NONE);
+
+        retval = ret;
+    } else if (name == "play") {
+        RefAudioNoob *ran = dynamic_cast<RefAudioNoob *>(object->GetUserData().get());
+
+        const CefRefPtr<CefV8Value> &file = arguments[0];
+        if (file->IsString()) {
+            ran->inner_.Play(file->GetStringValue().ToString());
+        } else {
+            std::cerr << "AudioNoob::Execute->play" << std::endl << std::flush;
+        }
+    } else {
+        return false;
     }
 
-    return false;
+    return true;
 }
