@@ -49,9 +49,16 @@ void WAVHelper::Append(WAVFile wav)
 
 void WAVHelper::Append(WAVFile wav, float length)
 {
+  int offset = file_.size;
   int num_bytes = length * wav.header.ByteRate;
   file_.data = (char*) realloc(file_.data, file_.size + num_bytes);
-  memcpy(file_.data + file_.size, wav.data, num_bytes);
+  int times = num_bytes / wav.header.Subchunk2Size;
+  int rest = num_bytes % wav.header.Subchunk2Size;
+  for(int i = times; i > 0; i--) {
+    memcpy(file_.data + offset, wav.data, wav.header.Subchunk2Size);
+    offset += wav.header.Subchunk2Size;
+  }
+  memcpy(file_.data + offset, wav.data, rest);
   file_.size += num_bytes;
   file_.header.ChunkSize += num_bytes;
   file_.header.Subchunk2Size += num_bytes;
@@ -67,7 +74,7 @@ void WAVHelper::AddAt(WAVFile wav, float offset)
   }
   int offset_bytes = offset * wav.header.ByteRate;
   for(int i = 0; i < wav.size; i++) {
-    file_.data[i+offset_bytes] += wav.data[i];
+    file_.data[i+offset_bytes] += wav.data[i % wav.header.Subchunk2Size];
   } 
 }
 
@@ -82,7 +89,7 @@ void WAVHelper::AddAt(WAVFile wav, float offset, float length)
   }
   int offset_bytes = offset * wav.header.ByteRate;
   for(int i = 0; i < length_bytes; i++) {
-    file_.data[i+offset_bytes] += wav.data[i];
+    file_.data[i+offset_bytes] += wav.data[i % wav.header.Subchunk2Size];
   } 
 }
 
