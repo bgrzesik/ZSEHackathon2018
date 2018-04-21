@@ -112,7 +112,7 @@ body::-webkit-scrollbar-thumb {
 
 .over-timeline {
   overflow-x: auto;
-  width: 20000px;
+  width: 13000px;
   -webkit-user-select: none; /* Safari 3.1+ */
   -moz-user-select: none; /* Firefox 2+ */
   -ms-user-select: none; /* IE 10+ */
@@ -121,9 +121,11 @@ body::-webkit-scrollbar-thumb {
     display: inline-block;
     width: 100px;
     float: left;
-    font-size: 13px;
+    font-size: 10px;
+    word-break: keep-all;
   }
   .item {
+    height: 20px;
     clear: both;
   }
   .rightboxes {
@@ -171,10 +173,10 @@ body::-webkit-scrollbar-thumb {
       display: block;
       content: ' ';
       position: absolute;
-      left: 0;
+      left: 100px;
       top:0;
       width: 5px;
-      height: 200px;
+      height: 150px;
       background: red;
     }
   }
