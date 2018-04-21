@@ -93,7 +93,6 @@
                 </div>
               </div>
             </div>
-
           </div>
 
 
@@ -144,6 +143,15 @@
               })
           }
           console.log(jsonExp);
+          return jsonExp;
+      }
+
+      var ab = AudioNoob.new();
+      var wh = WAVHelper.new();
+
+      for(var i = 0; i<allItems.length; i++) {
+          var actSample = ab.load(allItems[i].itemType);
+          wh.addAt(actSample, allItems[i].itemSecIndex, 0.1);
       }
 
 
