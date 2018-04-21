@@ -25,6 +25,7 @@ WAVFile::WAVFile()
 WAVHelper::WAVHelper() {
   file_ = WAVFile();
 }
+
 WAVFile WAVHelper::load(std::string file)
 {
   WAVFile wav;
@@ -44,6 +45,16 @@ void WAVHelper::append(WAVFile wav)
   file_.size += wav.size;
   file_.header.ChunkSize += wav.size;
   file_.header.Subchunk2Size += wav.size;
+}
+
+void WAVHelper::append(WAVFile wav, float length)
+{
+  int num_bytes = length * wav.header.ByteRate;
+  file_.data = (char*) realloc(file_.data, file_.size + num_bytes);
+  memcpy(file_.data + file_.size, wav.data, num_bytes);
+  file_.size += num_bytes;
+  file_.header.ChunkSize += num_bytes;
+  file_.header.Subchunk2Size += num_bytes;
 }
 
 void WAVHelper::render(std::string output)
