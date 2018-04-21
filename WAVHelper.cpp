@@ -1,6 +1,7 @@
 #include "WAVHelper.hpp"
 #include <cstdlib>
 #include <cstring>
+#include <iostream>
 
 WAVFile::WAVFile()
 {
@@ -22,28 +23,18 @@ WAVFile::WAVFile()
   header.Subchunk2Size = 0;
 }
 
-void WAVFile::SetTone(int diff) {
-
-}
-
-void WAVFile::SetSpeed(int multiplier) {
-
-}
-
 WAVHelper::WAVHelper() {
   file_ = WAVFile();
 }
 
-WAVFile WAVHelper::Load(std::string file)
+void WAVHelper::Load(WAVFile &file, std::string filename)
 {
-  WAVFile wav;
-  FILE* f = fopen(file.c_str(), "r");
-  fread(&wav.header, sizeof(WAVHeader), 1, f);
-  wav.size = wav.header.Subchunk2Size;
-  wav.data = (char*) calloc(wav.size, 1);
-  fread(wav.data, 1, wav.size, f);
-
-  return wav;
+  FILE* f = fopen(filename.c_str(), "r");
+  fread(&file.header, sizeof(WAVHeader), 1, f);
+  file.size = file.header.Subchunk2Size;
+  file.data = new char[file.size];
+  fread(file.data, 1, file.size, f);
+  fclose(f);
 }
 
 void WAVHelper::Append(WAVFile &wav)
@@ -53,6 +44,7 @@ void WAVHelper::Append(WAVFile &wav)
   file_.size += wav.size;
   file_.header.ChunkSize += wav.size;
   file_.header.Subchunk2Size += wav.size;
+
 }
 
 void WAVHelper::Append(WAVFile &wav, float length)
@@ -77,7 +69,7 @@ void WAVHelper::AddAt(WAVFile &wav, float offset)
   int offset_bytes = offset * wav.header.ByteRate;
   if(wav.size + offset_bytes > file_.size) {
     int n_size = wav.size + offset_bytes;
-    file_.data = (char*) realloc(file_.data, n_size);
+    file_.data = (char *) realloc(file_.data, n_size);
     file_.header.ChunkSize = 36 + n_size;
     file_.header.Subchunk2Size = n_size;
     file_.size = n_size;
@@ -92,7 +84,7 @@ void WAVHelper::AddAt(WAVFile &wav, float offset, float length)
   int length_bytes = length * wav.header.ByteRate;
   int offset_bytes = offset * wav.header.ByteRate;
   if(length_bytes + offset_bytes > file_.size) {
-    file_.data = (char*) realloc(file_.data, length_bytes);
+    file_.data = (char*) realloc(file_.data, length_bytes+offset_bytes);
     file_.header.ChunkSize = 36 + length_bytes;
     file_.header.Subchunk2Size = length_bytes;
     file_.size = length_bytes;
