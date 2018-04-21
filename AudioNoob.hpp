@@ -10,6 +10,8 @@
   #include <OpenAL/alc.h>
 #endif
 
+#include <string>
+
 class Audio
 {
 };
@@ -19,7 +21,7 @@ class AudioNoob
   public:
     AudioNoob();
 		~AudioNoob();
-    void Play();
+    void Play(std::string file);
 
   private:
     Audio data_;

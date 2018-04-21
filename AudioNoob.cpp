@@ -8,13 +8,13 @@ AudioNoob::~AudioNoob()
 {
 }
 
-void AudioNoob::Play()
+void AudioNoob::Play(std::string file)
 {
 	ALuint buffer, source;
 	ALint state;
 	alutInit(0, NULL);
 	alGetError();
-	buffer = alutCreateBufferFromFile("cello.wav");
+	buffer = alutCreateBufferFromFile(file.c_str());
 	alGenSources(1, &source);
 	alSourcei(source, AL_BUFFER, buffer);
 	alSourcePlay(source);
