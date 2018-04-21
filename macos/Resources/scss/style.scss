@@ -205,3 +205,18 @@ body::-webkit-scrollbar-thumb {
     clear: both;
   }
 }
+
+.play {
+  font-size: 30px;
+  float: right;
+  color: #474747;
+  font-weight: bold;
+  img {
+    max-width: 50px;
+    margin-top: -7px;
+  }
+  &:hover {
+    color: #474747;
+    text-decoration: none;
+  }
+}
